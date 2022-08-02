@@ -1,0 +1,16 @@
+[development]
+
+enabled_web_urls = {must_exist=true, len_min=1}
+kafka_bootstrap_servers = {must_exist=true, len_min=1}
+kafka_security_protocol = {must_exist=true, len_min=1}
+kafka_ssl_certfile = {must_exist=true, len_min=1}
+kafka_ssl_keyfile = {must_exist=true, len_min=1}
+kafka_ssl_cafile = {must_exist=true, len_min=1}
+kafka_topic = {must_exist=true, len_min=1}
+postgres_host = {must_exist=true, len_min=1}
+postgres_port = {must_exist=true, gte=1}
+postgres_user = {must_exist=true, len_min=1}
+postgres_password = {must_exist=true, len_min=1}
+postgres_dbname = {must_exist=true, len_min=1}
+postgres_sslmode = {must_exist=true, len_min=1}
+postgres_ssl_cafile = {must_exist=true, len_min=1}
