@@ -1,0 +1,7 @@
+
+# Ignore dynaconf secret files
+.secrets.*
+kafka.client.key
+kafka.client.cert
+kafka.ca.cert
+postgres.ca.cert

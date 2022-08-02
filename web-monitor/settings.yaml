@@ -1,0 +1,18 @@
+development:
+  web_regex: 'CSS1Compat'
+  enabled_web_urls: ['https://www.google.ee/', 'https://www.google.com/',
+                     'https://www.google.au/', 'https://www.google.fi/',
+                     'https://aiven.io/']
+  kafka_bootstrap_servers: 'kafka-6d026c2-matahh-d50f.aivencloud.com:14772'
+  kafka_security_protocol: 'SSL'
+  kafka_ssl_certfile: '/home/matah/devel/SRE-20221907-mrx88/kafka.client.cert'
+  kafka_ssl_keyfile: '/home/matah/devel/SRE-20221907-mrx88/kafka.client.key'
+  kafka_ssl_cafile: '/home/matah/devel/SRE-20221907-mrx88/kafka.ca.cert'
+  kafka_topic: 'WebMonitor'
+  postgres_host: 'pg-35ba704d-matahh-d50f.aivencloud.com'
+  postgres_port: 14770
+  postgres_user: 'avnadmin'
+  postgres_dbname: 'defaultdb'
+  postgres_sslmode: 'verify-ca'
+  postgres_ssl_cafile: '/home/matah/devel/SRE-20221907-mrx88/postgres.ca.cert'
+
