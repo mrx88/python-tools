@@ -1,3 +1,6 @@
 [submodule "python-weather-notify"]
 	path = python-weather-notify
 	url = https://github.com/mrx88/python-weather-notify
+[submodule "k8s-python-flask-api"]
+	path = k8s-python-flask-api
+	url = https://github.com/mrx88/k8s-python-flask-api
