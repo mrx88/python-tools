@@ -19,6 +19,23 @@ Options:
   --help                   Show this message and exit.
 ```
 
+## Docker
+
+```
+docker build --pull --rm -f "Dockerfile" -t youtubevideos:latest "."
+docker run youtubevideos --help 
+Usage: main.py [OPTIONS]
+
+  Main function
+
+Options:
+  --url TEXT               YouTube channel URL  [required]
+  --resolution [low|high]  Video resolution
+  --vid_dir TEXT           Video <directory> location
+  --last INTEGER           Number of last videos to download
+  --help                   Show this message and exit.
+```
+
 ## Examples
 
 ### Download all videos
