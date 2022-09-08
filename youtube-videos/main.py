@@ -6,9 +6,9 @@ import os
 import logging
 import click
 from time import sleep
-from multiprocessing.pool import Pool
 from multiprocessing import current_process
 from multiprocessing import cpu_count
+from multiprocessing import get_context
 
 
 def get_video(url, resolution, vid_dir):
@@ -79,6 +79,14 @@ def get_channel(url):
         return None
 
 
+def getlogger():
+    """Logging details
+    """
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        filename='main.log')
+
+
 @click.command()
 @click.option('--url', help='YouTube channel URL', required=True)
 @click.option('--resolution', default='high', help='Video resolution',
@@ -87,14 +95,13 @@ def get_channel(url):
 @click.option('--last', help='Number of last videos to download', type=int)
 def main(url, resolution, vid_dir, last):
     """Main function"""
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(levelname)s - %(message)s',
-                        filename='main.log')
+    getlogger()
     try:
         # Get video URLs from a YouTube channel
         yt_url = get_channel(url)
         # Download YouTube videos defined in the channel
-        pool = Pool(cpu_count())
+        ctx = get_context('spawn')
+        pool = ctx.Pool(cpu_count(), initializer=getlogger)
         if last:
             latest = []
             for url in range(last):
