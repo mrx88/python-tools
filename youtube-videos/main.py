@@ -9,6 +9,7 @@ from time import sleep
 from multiprocessing import current_process
 from multiprocessing import cpu_count
 from multiprocessing import get_context
+import deepdiff
 
 
 def get_video(url, resolution, vid_dir):
@@ -26,27 +27,35 @@ def get_video(url, resolution, vid_dir):
         # block for a moment
         sleep(1)
         date = yt.publish_date.astimezone().strftime('%Y-%m-%d')
-        # publish_dir = os.path.join(os.getcwd(), vid_dir + date)
         # Define directory location
         publish_dir = os.path.join(vid_dir, date)
         logging.info(
             f"Video Title: {yt.title}|Date: {date}|Saving to: {publish_dir}")
-        new_dir = None
         if not os.path.exists(publish_dir):
             logging.info(f"Creating directory: {publish_dir}")
             os.makedirs(publish_dir)
-            new_dir = True
+        # Get current file list in directory
+        current_files = get_files(publish_dir)
+
         # Download the video
         if resolution == 'high':
             yt.streams.get_highest_resolution().download(
                 output_path=publish_dir, max_retries=5)
+            # Get current (new) file list in directory
+            new_files = get_files(publish_dir)
+
         elif resolution == 'low':
             yt.streams.get_lowest_resolution().download(
                 output_path=publish_dir, max_retries=5)
+            new_files = get_files(publish_dir)
 
-        if new_dir:
-            dirlist = os.listdir(publish_dir)
-            print(f"New daily videos in {publish_dir}: {dirlist}")
+        # Report new video filenames
+        diff = deepdiff.DeepDiff(current_files, new_files)
+        fileitems = diff.get('iterable_item_added')
+        if fileitems:
+            for h in fileitems.items():
+                print(f"New video added: {h[1]}")
+                logging.info(f"New video added: {h[1]}")
 
     except exceptions.VideoUnavailable as e:
         logging.error(f'Video is unavailable: {e}')
@@ -54,6 +63,29 @@ def get_video(url, resolution, vid_dir):
         logging.error(f'Pytube error: {e}')
     except Exception as e:
         logging.error(f'Get_video other Error: {e}')
+
+
+def get_files(publish_dir):
+    """Get full filenames with directory location
+
+    Args:
+        publish_dir (list): Video directory location
+
+    Returns:
+        list: full file name with path location
+    """
+    try:
+        filelist = os.listdir(publish_dir)
+        curfilelist = []
+        for file in filelist:
+            fileloc = publish_dir + "/" + file
+            file_exists = os.path.exists(fileloc)
+            if file_exists:
+                curfilelist.append(fileloc)
+        return curfilelist
+
+    except Exception as e:
+        logging.error(f'Get_files Error: {e}')
 
 
 def get_channel(url):
