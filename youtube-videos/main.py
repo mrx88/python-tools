@@ -131,11 +131,16 @@ def main(url, resolution, vid_dir, last):
     try:
         # Get video URLs from a YouTube channel
         yt_url = get_channel(url)
+        total_videos = len(yt_url)
+        logging.info(f"Total videos: {total_videos}")
         # Download YouTube videos defined in the channel
         ctx = get_context('spawn')
         pool = ctx.Pool(cpu_count(), initializer=getlogger)
         if last:
             latest = []
+            # If total_videos is less than last, then override last
+            if total_videos < last:
+                last = total_videos
             for url in range(last):
                 video = yt_url[url]
                 latest.append(video)
