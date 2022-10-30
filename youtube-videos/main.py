@@ -10,6 +10,7 @@ from multiprocessing import current_process
 from multiprocessing import cpu_count
 from multiprocessing import get_context
 import deepdiff
+import sys
 
 
 def get_video(url, resolution, vid_dir):
@@ -100,11 +101,13 @@ def get_channel(url):
     try:
         c = Channel(url)
         logging.info(f"Channel name: {c.channel_name}")
-
+        if not c:
+            logging.error(f"Error: No response from the channel: {c}")
+            return None
         return c.video_urls
 
     except exceptions.PytubeError as e:
-        logging.error(e)
+        logging.error(f'Pytube error: {e}')
         return None
     except Exception as e:
         logging.error(f'Get_channel other error: {e}')
@@ -128,9 +131,22 @@ def getlogger():
 def main(url, resolution, vid_dir, last):
     """Main function"""
     getlogger()
+    # Show Python version
+    logging.info(f"Python version: {sys.version}")
     try:
         # Get video URLs from a YouTube channel
         yt_url = get_channel(url)
+        # Add retry logic if no videos are found
+        # due to mysterious "onResponseReceivedActions" error
+        # TODO: troubleshoot "onResponseReceivedActions" log output
+        count = 0
+        while yt_url is None:
+            count += 1
+            logging.info(f"Retry {count}: url is None. Retrying...")
+            yt_url = get_channel(url)
+            if yt_url is not None:
+                break
+
         total_videos = len(yt_url)
         logging.info(f"Total videos: {total_videos}")
         # Download YouTube videos defined in the channel
