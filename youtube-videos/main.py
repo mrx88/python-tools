@@ -63,7 +63,7 @@ def get_video(url, resolution, vid_dir):
     except exceptions.PytubeError as e:
         logging.error(f'Pytube error: {e}')
     except Exception as e:
-        logging.error(f'Get_video other Error: {e}')
+        logging.error(f'Error in get_video - Title: {yt.title} - Error: {e}')
 
 
 def get_files(publish_dir):
@@ -139,6 +139,7 @@ def main(url, resolution, vid_dir, last):
         # Add retry logic if no videos are found
         # due to mysterious "onResponseReceivedActions" error
         # TODO: troubleshoot "onResponseReceivedActions" log output
+        # https://github.com/pytube/pytube/issues/1408
         count = 0
         while yt_url is None:
             count += 1
